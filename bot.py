@@ -154,6 +154,11 @@ class VerifyView(discord.ui.View):
             verify_role = interaction.guild.get_role(VERIFY_ROLE_ID)
             if verify_role:
                 await user.add_roles(verify_role)
+                log_verification(
+                    user_id=user.id,
+                    username=user.name,
+                    age=age
+                )
                 embed = discord.Embed(
                     title="✅ Weryfikacja Powiodła Się!",
                     description=f"Witaj na serwerze {interaction.guild.name}! 🎉",
