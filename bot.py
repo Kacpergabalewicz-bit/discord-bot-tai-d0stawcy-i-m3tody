@@ -15,6 +15,8 @@ ADMIN_ROLES = [1473027559594791137, 1473027623163662397]
 MUTE_ROLE_ID = 1473038867199426836
 VERIFY_ROLE_ID = 1473045046529101824
 OPINION_CHANNEL_ID = 1473051804550828233
+WELCOME_CHANNEL_ID = None  # Ustaw ID kanału powitalnego (np. 1234567890) lub None = systemowy
+GUILD_ID = 1473027558768545963  # ID Twojego serwera Discord
 
 # Funkcja do sprawdzenia uprawnień administratora
 def is_admin(interaction):
@@ -24,6 +26,7 @@ def is_admin(interaction):
 
 # Konfiguracja intencji
 intents = discord.Intents.default()
+intents.members = True  # Wymagane do śledzenia dołączeń
 
 # Tworzenie bota
 bot = commands.Bot(command_prefix='/', intents=intents)
@@ -183,11 +186,33 @@ class VerifyView(discord.ui.View):
 @bot.event
 async def on_ready():
     try:
-        synced = await bot.tree.sync()
+        guild = discord.Object(id=GUILD_ID)
+        bot.tree.copy_global_to(guild=guild)
+        synced = await bot.tree.sync(guild=guild)
         print(f'{bot.user} zalogowano pomyślnie!')
-        print(f"Zsynchronizowano {len(synced)} komend(y)")
+        print(f"Zsynchronizowano {len(synced)} komend(y) dla serwera {GUILD_ID}")
     except Exception as e:
         print(f"Błąd synchronizacji: {e}")
+
+# Event: Nowy członek
+@bot.event
+async def on_member_join(member):
+    """Wysyła wiadomość powitalną gdy ktoś dołączy"""
+    channel_id = WELCOME_CHANNEL_ID or (member.guild.system_channel.id if member.guild.system_channel else None)
+    if not channel_id:
+        return
+
+    channel = member.guild.get_channel(channel_id)
+    if channel:
+        embed = discord.Embed(
+            title="👋 Witamy na serwerze!",
+            description=f"Cześć {member.mention}! Miło Cię widzieć! 🎉",
+            color=discord.Color.green()
+        )
+        embed.add_field(name="📋 Weryfikacja", value="Przejdź weryfikację, aby uzyskać dostęp do serwera!", inline=False)
+        embed.set_thumbnail(url=member.display_avatar.url)
+        embed.set_footer(text=f"Jesteś {member.guild.member_count}. członkiem!")
+        await channel.send(embed=embed)
 
 # ===== SLASH COMMANDS =====
 
