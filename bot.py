@@ -198,11 +198,15 @@ async def on_ready():
 @bot.event
 async def on_member_join(member):
     """Wysyła wiadomość powitalną gdy ktoś dołączy"""
-    channel_id = WELCOME_CHANNEL_ID or (member.guild.system_channel.id if member.guild.system_channel else None)
-    if not channel_id:
+    # Szukaj kanału o nazwie "powitania"
+    channel = discord.utils.find(lambda c: c.name == "powitania", member.guild.text_channels)
+    
+    if not channel:
+        # Jeśli nie ma, użyj kanału systemowego
+        channel = member.guild.system_channel
+    
+    if not channel:
         return
-
-    channel = member.guild.get_channel(channel_id)
     if channel:
         embed = discord.Embed(
             title="👋 Witamy na serwerze!",
