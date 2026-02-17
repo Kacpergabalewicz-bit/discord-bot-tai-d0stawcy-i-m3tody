@@ -2,7 +2,8 @@ import sqlite3
 from datetime import datetime
 import os
 
-DB_PATH = "discord_bot.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "discord_bot.db")
 
 def init_db():
     """Tworzy bazę danych i tabele"""

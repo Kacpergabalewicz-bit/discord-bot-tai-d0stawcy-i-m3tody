@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel - Baza danych</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar h1 {
+            font-size: 24px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .navbar a:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th {
+            background: #f0f0f0;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            color: #333;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .empty {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>📁 Baza danych</h1>
+        <div class="nav-links">
+            <a href="/dashboard">Panel</a>
+            <a href="/logout">Wyloguj się</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <h2>✅ Weryfikacje</h2>
+            {% if data.verifications %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Uzytkownik</th>
+                        <th>Wiek</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for verification in data.verifications|reverse %}
+                    <tr>
+                        <td>{{ verification[2] }}</td>
+                        <td>{{ verification[3] }}</td>
+                        <td>{{ verification[4] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty">Brak danych</div>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <h2>⭐ Opinie</h2>
+            {% if data.opinions %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Uzytkownik</th>
+                        <th>Produkt</th>
+                        <th>Ocena</th>
+                        <th>Polecenie</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for opinion in data.opinions|reverse %}
+                    <tr>
+                        <td>{{ opinion[2] }}</td>
+                        <td>{{ opinion[3] }}</td>
+                        <td>{{ opinion[5] }}</td>
+                        <td>{{ opinion[6] }}</td>
+                        <td>{{ opinion[7] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty">Brak danych</div>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <h2>🔨 Bany</h2>
+            {% if data.bans %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Uzytkownik</th>
+                        <th>Powod</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ban in data.bans|reverse %}
+                    <tr>
+                        <td>{{ ban[2] }}</td>
+                        <td>{{ ban[4] }}</td>
+                        <td>{{ ban[5] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty">Brak danych</div>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <h2>🔇 Muty</h2>
+            {% if data.mutes %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Uzytkownik</th>
+                        <th>Powod</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mute in data.mutes|reverse %}
+                    <tr>
+                        <td>{{ mute[2] }}</td>
+                        <td>{{ mute[4] }}</td>
+                        <td>{{ mute[5] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty">Brak danych</div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

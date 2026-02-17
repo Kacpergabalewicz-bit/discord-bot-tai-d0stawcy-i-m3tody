@@ -64,6 +64,14 @@ def dashboard():
     
     return render_template('dashboard.html', stats=stats, data=data)
 
+@app.route('/database')
+def database_view():
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
+
+    data = get_all_data()
+    return render_template('database.html', data=data)
+
 @app.route('/user/<username>')
 def user_history(username):
     if 'logged_in' not in session:
