@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 from database import get_user_history, get_all_data, init_db
 from datetime import datetime, timedelta
+from threading import Thread
 import os
 
 app = Flask(__name__)
@@ -89,6 +90,12 @@ def search():
     return redirect(url_for('user_history', username=query))
 
 if __name__ == '__main__':
+    start_bot = os.environ.get('START_BOT', '1') == '1'
+    if start_bot:
+        import bot as discord_bot
+        bot_thread = Thread(target=discord_bot.run_bot, daemon=True)
+        bot_thread.start()
+
     port = int(os.environ.get('PORT', 5000))
     print(f"🚀 Panel uruchamiany na http://0.0.0.0:{port}")
     print(f"📧 Email: {ADMIN_EMAIL}")

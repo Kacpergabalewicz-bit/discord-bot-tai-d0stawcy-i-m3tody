@@ -4,20 +4,12 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    startCommand: python app.py
     autoDeploy: true
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.6
-  - type: worker
-    name: discord-bot
-    env: python
-    plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: python bot.py
-    autoDeploy: true
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.6
+      - key: START_BOT
+        value: "1"
       - key: DISCORD_TOKEN
         sync: false

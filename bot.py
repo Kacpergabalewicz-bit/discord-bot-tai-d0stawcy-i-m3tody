@@ -478,4 +478,10 @@ async def opinia(interaction: discord.Interaction):
     await interaction.response.send_modal(modal)
 
 # Uruchomienie bota
-bot.run(TOKEN)
+def run_bot():
+    if not TOKEN:
+        raise RuntimeError("DISCORD_TOKEN is not set")
+    bot.run(TOKEN)
+
+if __name__ == '__main__':
+    run_bot()
