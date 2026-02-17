@@ -149,16 +149,18 @@ class VerifyView(discord.ui.View):
             except Exception as e:
                 await user.send(f"⏱️ Czas się skończył! Spróbuj ponownie za chwilę.")
                 return
+
+            log_ok = log_verification(
+                user_id=user.id,
+                username=user.name,
+                age=age
+            )
+            print(f"Verification saved: {log_ok} user={user.name} id={user.id}")
             
             # Wszystko OK - daj rolę
             verify_role = interaction.guild.get_role(VERIFY_ROLE_ID)
             if verify_role:
                 await user.add_roles(verify_role)
-                log_verification(
-                    user_id=user.id,
-                    username=user.name,
-                    age=age
-                )
                 embed = discord.Embed(
                     title="✅ Weryfikacja Powiodła Się!",
                     description=f"Witaj na serwerze {interaction.guild.name}! 🎉",
