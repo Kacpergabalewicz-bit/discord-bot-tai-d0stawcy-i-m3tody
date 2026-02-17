@@ -191,6 +191,7 @@ async def on_ready():
         synced = await bot.tree.sync(guild=guild)
         print(f'{bot.user} zalogowano pomyślnie!')
         print(f"Zsynchronizowano {len(synced)} komend(y) dla serwera {GUILD_ID}")
+        print("✅ BOT RESETOWANY I GOTOWY!")
     except Exception as e:
         print(f"Błąd synchronizacji: {e}")
 
