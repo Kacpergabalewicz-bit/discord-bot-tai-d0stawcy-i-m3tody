@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historia użytkownika - {{ username }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 5px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .not-found {
+            background: #fee;
+            color: #c33;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th {
+            background: #f0f0f0;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        table tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .empty {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+        }
+        
+        .opinion-detail {
+            background: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .label {
+            font-weight: bold;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>📊 Historia użytkownika</h1>
+        <a href="/dashboard">← Wróć do panelu</a>
+    </div>
+    
+    <div class="container">
+        {% if found %}
+        <div class="header">
+            <h1>👤 {{ username }}</h1>
+            <p>Kompletna historia użytkownika</p>
+        </div>
+        
+        {% if history.opinions %}
+        <div class="section">
+            <h2>⭐ Opinie ({{ history.opinions|length }})</h2>
+            {% for opinion in history.opinions %}
+            <div class="opinion-detail">
+                <div><span class="label">Produkt:</span> {{ opinion[3] }}</div>
+                <div><span class="label">Realizacja:</span> {{ opinion[4] }}</div>
+                <div><span class="label">Ocena:</span> {{ '⭐' * opinion[5] }} ({{ opinion[5] }}/5)</div>
+                <div><span class="label">Polecenie:</span> {% if opinion[6] == 'tak' %}✅ Polecam{% else %}❌ Nie polecam{% endif %}</div>
+                <div><span class="label">Data:</span> {{ opinion[7] }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% if history.verifications %}
+        <div class="section">
+            <h2>✅ Weryfikacje ({{ history.verifications|length }})</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Wiek</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for verification in history.verifications %}
+                    <tr>
+                        <td>{{ verification[3] }} lat</td>
+                        <td>{{ verification[4] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        {% if history.bans %}
+        <div class="section">
+            <h2>🔨 Bany ({{ history.bans|length }})</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Powód</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ban in history.bans %}
+                    <tr>
+                        <td>{{ ban[4] }}</td>
+                        <td>{{ ban[5] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        {% if history.mutes %}
+        <div class="section">
+            <h2>🔇 Muty ({{ history.mutes|length }})</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Powód</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mute in history.mutes %}
+                    <tr>
+                        <td>{{ mute[4] }}</td>
+                        <td>{{ mute[5] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        {% if not history.opinions and not history.verifications and not history.bans and not history.mutes %}
+        <div class="not-found">
+            <h2>⚠️ Brak danych</h2>
+            <p>Ten użytkownik nie ma żadnych rekordów w systemie.</p>
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <div class="not-found">
+            <h2>❌ Użytkownik nie znaleziony</h2>
+            <p>Brak użytkownika o nicku: <strong>{{ username }}</strong></p>
+            <p>Spróbuj wpisać prawidłowy nick!</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

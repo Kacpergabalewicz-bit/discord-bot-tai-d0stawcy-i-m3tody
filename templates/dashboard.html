@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar h1 {
+            font-size: 24px;
+        }
+        
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .navbar a:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .search-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .search-box form {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .search-box button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card h3 {
+            color: #667eea;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card .number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th {
+            background: #f0f0f0;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        table tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .user-link {
+            color: #667eea;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .user-link:hover {
+            text-decoration: underline;
+        }
+        
+        .empty {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>📊 Panel Admina - Discord Bot</h1>
+        <a href="/logout">Wyloguj się</a>
+    </div>
+    
+    <div class="container">
+        <div class="search-box">
+            <form method="GET" action="/search">
+                <input type="text" name="query" placeholder="Wpisz nick użytkownika..." required>
+                <button type="submit">🔍 Szukaj</button>
+            </form>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <h3>Opinii</h3>
+                <div class="number">{{ stats.opinions }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>Weryfikacji</h3>
+                <div class="number">{{ stats.verifications }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>Banów</h3>
+                <div class="number">{{ stats.bans }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>Mutów</h3>
+                <div class="number">{{ stats.mutes }}</div>
+            </div>
+        </div>
+        
+        {% if data.opinions %}
+        <div class="section">
+            <h2>⭐ Ostatnie Opinie</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Użytkownik</th>
+                        <th>Produkt</th>
+                        <th>Ocena</th>
+                        <th>Polecenie</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for opinion in data.opinions[-10:]|reverse %}
+                    <tr>
+                        <td><a class="user-link" href="/user/{{ opinion[2] }}">{{ opinion[2] }}</a></td>
+                        <td>{{ opinion[3] }}</td>
+                        <td>{{ '⭐' * opinion[5] }} ({{ opinion[5] }}/5)</td>
+                        <td>{% if opinion[6] == 'tak' %}✅ Polecam{% else %}❌ Nie polecam{% endif %}</td>
+                        <td>{{ opinion[7] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        {% if data.bans %}
+        <div class="section">
+            <h2>🔨 Bany</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Użytkownik</th>
+                        <th>Powód</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ban in data.bans[-10:]|reverse %}
+                    <tr>
+                        <td><a class="user-link" href="/user/{{ ban[2] }}">{{ ban[2] }}</a></td>
+                        <td>{{ ban[4] }}</td>
+                        <td>{{ ban[5] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        {% if data.mutes %}
+        <div class="section">
+            <h2>🔇 Muty</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Użytkownik</th>
+                        <th>Powód</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mute in data.mutes[-10:]|reverse %}
+                    <tr>
+                        <td><a class="user-link" href="/user/{{ mute[2] }}">{{ mute[2] }}</a></td>
+                        <td>{{ mute[4] }}</td>
+                        <td>{{ mute[5] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
